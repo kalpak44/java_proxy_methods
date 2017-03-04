@@ -1,0 +1,32 @@
+group 'pavel.home'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.javassist/javassist
+    compile group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Version': version, 'Main-Class': 'Main'
+    }
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+task runJar(dependsOn:jar) << {
+    javaexec {
+        main="-jar";
+        args = [
+                "build/libs/anotation-example-1.0-SNAPSHOT.jar",
+        ]
+    }
+}
